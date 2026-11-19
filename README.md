@@ -26,13 +26,11 @@ Browse products, add them to a cart, change quantities and complete a purchase.
 
 ## Run it
 
-Open `index.html` in any browser, or serve the folder:
+The site runs directly from GitHub Pages — no local server or setup needed:
 
-```bash
-python -m http.server 8000
-```
+**Live demo:** https://invinsiblesri.github.io/FSWD-Ex-2-B-SALES/
 
-Then visit <http://localhost:8000>.
+Every push to `main` redeploys the site automatically in about a minute.
 
 ## How the cart works
 
