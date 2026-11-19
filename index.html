@@ -1,65 +1,113 @@
-```javascript
-let posts = [];
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UrbanCart - Shop Smarter</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
-function addPost() {
-    let text = document.getElementById("postText").value;
+  <!-- ===== Top bar ===== -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🛒</span>
+      <span>UrbanCart</span>
+    </div>
 
-    if (text.trim() == "") {
-        alert("Write something!");
-        return;
-    }
+    <div class="filters">
+      <input
+        id="search"
+        type="search"
+        placeholder="Search products..."
+        oninput="applyFilters()"
+      >
+      <select id="category" onchange="applyFilters()"></select>
+    </div>
 
-    posts.unshift({
-        text: text,
-        likes: 0
-    });
+    <button class="cart-btn" onclick="toggleCart()">
+      🛍️ Cart
+      <span id="cartCount" class="badge">0</span>
+    </button>
+  </header>
 
-    document.getElementById("postText").value = "";
-    displayPosts(posts);
-}
+  <!-- ===== Main layout ===== -->
+  <main class="layout">
 
-function displayPosts(data) {
-    let output = "";
+    <section class="catalog">
+      <h1>Featured Products</h1>
+      <p class="muted" id="resultInfo"></p>
+      <div id="productGrid" class="grid"></div>
+      <p id="emptyResults" class="empty hidden">No products match your search.</p>
+    </section>
 
-    data.forEach((post, index) => {
-        output += `
-            <div class="post">
-                <p>${post.text}</p>
+    <!-- ===== Cart ===== -->
+    <aside id="cartPanel" class="cart-panel">
+      <div class="cart-head">
+        <h2>Your Cart</h2>
+        <button class="icon-btn" onclick="toggleCart()" title="Close cart">✕</button>
+      </div>
 
-                <button class="like"
-                    onclick="likePost(${index})">
-                    ❤️ ${post.likes}
-                </button>
+      <div id="cartItems" class="cart-items"></div>
+      <div id="cartSummary" class="summary"></div>
+    </aside>
 
-                <button class="delete"
-                    onclick="deletePost(${index})">
-                    Delete
-                </button>
-            </div>
-        `;
-    });
+  </main>
 
-    document.getElementById("posts").innerHTML = output;
-}
+  <div id="overlay" class="overlay" onclick="toggleCart()"></div>
 
-function likePost(index) {
-    posts[index].likes++;
-    displayPosts(posts);
-}
+  <!-- ===== Checkout modal ===== -->
+  <div id="checkoutModal" class="modal hidden">
+    <div class="modal-card">
+      <h2>Checkout</h2>
+      <p class="muted">Enter your delivery details to place the order.</p>
 
-function deletePost(index) {
-    posts.splice(index, 1);
-    displayPosts(posts);
-}
+      <form onsubmit="placeOrder(event)">
+        <label>Full name
+          <input id="custName" type="text" placeholder="Sriram S" required>
+        </label>
 
-function searchPosts() {
-    let search =
-        document.getElementById("search").value.toLowerCase();
+        <label>Email
+          <input id="custEmail" type="email" placeholder="you@example.com" required>
+        </label>
 
-    let result = posts.filter(post =>
-        post.text.toLowerCase().includes(search)
-    );
+        <label>Delivery address
+          <textarea id="custAddress" rows="2" placeholder="House no, street, city, PIN" required></textarea>
+        </label>
 
-    displayPosts(result);
-}
-```
+        <label>Payment method
+          <select id="payMethod" required>
+            <option value="Cash on Delivery">Cash on Delivery</option>
+            <option value="UPI">UPI</option>
+            <option value="Credit / Debit Card">Credit / Debit Card</option>
+          </select>
+        </label>
+
+        <div id="checkoutTotal" class="pay-total"></div>
+
+        <div class="modal-actions">
+          <button type="button" class="ghost" onclick="closeCheckout()">Cancel</button>
+          <button type="submit" class="primary">Place Order</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== Order confirmation ===== -->
+  <div id="successModal" class="modal hidden">
+    <div class="modal-card center">
+      <div class="tick">✅</div>
+      <h2>Order Placed!</h2>
+      <p id="successText" class="muted"></p>
+      <div id="successSummary" class="receipt"></div>
+      <button class="primary wide" onclick="closeSuccess()">Continue Shopping</button>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>FSWD Exercise 2-B &middot; Sales / e-Commerce demo &middot; Built with HTML, CSS &amp; JavaScript</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
